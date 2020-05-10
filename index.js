@@ -50,7 +50,10 @@ const extractBootcampData = (url) => {
 
         resolve(bootcamp);
       } else {
-        reject(url, err);
+        reject({
+          url,
+          err
+        });
       }
     });
   });
@@ -78,8 +81,8 @@ const writeBootcampsToFile = (bootcamps) => {
 };
 
 const writeErrorsToFile = (unsuccessfulRequests) => {
-  if (Object.keys(unsuccessfulRequests) > 0) {
-    fs.writeFile("./errors.json", JSON.stringify(unsuccessfulRequests), (err) => {
+  if (Object.keys(unsuccessfulRequests).length > 0) {
+    fs.writeFile("./results/errors.json", JSON.stringify(unsuccessfulRequests), (err) => {
       if (err) {
         console.log(err);
       } else {
@@ -97,8 +100,8 @@ const getAllBootcampData = () => {
   urls.urls.forEach((url) => {
     promises.push(extractBootcampData(url).then((bootcamp) => {
       bootcamps[bootcamp.name] = bootcamp;
-    }).catch((url, err) => {
-      unsuccessfulRequests[`${url}`] = err;
+    }).catch((errorObject) => {
+      unsuccessfulRequests[`${errorObject.url}`] = errorObject.err;
     }));
   });
 
