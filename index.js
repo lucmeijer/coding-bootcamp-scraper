@@ -2,7 +2,7 @@ var request = require("request");
 var cheerio = require("cheerio");
 var fs = require("fs");
 
-let urls = require("./urls.json");
+let courseReportUrls = require("./data/urls.json").coursereport;
 
 const extractBootcampData = (url) => {
   return new Promise((resolve, reject) => {
@@ -97,7 +97,7 @@ const getAllBootcampData = () => {
   let bootcamps = {};
   let unsuccessfulRequests = {};
 
-  urls.urls.forEach((url) => {
+  courseReportUrls.forEach((url) => {
     promises.push(extractBootcampData(url).then((bootcamp) => {
       bootcamps[bootcamp.name] = bootcamp;
     }).catch((errorObject) => {
